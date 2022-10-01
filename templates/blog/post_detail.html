@@ -4,22 +4,39 @@
 
 {% block title %} home.html {% endblock %}
 
+{% block extra-style %}
+<style>
+    .my-img-h300 {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .my-content {
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
         <!-- Post Detail Grid-->
         <div class="page-section bg-light" id="post">
             <div class="container mt-5">
                 <div class="row">
                         <!-- Post title-->
-                        <h1 class="fw-bolder mb-1">Welcome to Blog Post!</h1>
+                        <h1 class="fw-bolder mb-1">[[ post.title ]]</h1>
                         <hr>
                         <p>
-                            <span>2021-06-15 &emsp;</span>
-                            <i class=""fas fa-copyright"></i> &nbsp;
-                            <span>IT &emsp;</span>
-                            <i class=""fas fa-tag"></i> &nbsp;
-                            <span>django python &emsp;</span>
+                            <span>[[ post.update_dt ]] &emsp;</span>
+                            <i class="fas fa-copyright"></i> &nbsp;
+                            <span>[[ post.category ]] &emsp;</span>
+                            <i class="fas fa-tag"></i> &nbsp;
+                            <span v-for="(tag, index) in post.tags" :key="index">
+                                <span v-if="index !== 0">,</span>
+                                [[ tag ]]
+                            </span> &emsp;
                             <i class="fas fa-heart"></i> &nbsp;
-                            <span> &emsp;</span>
+                            <span>[[ post.like]] &emsp;</span>
                         </p>
                         <hr>
                 </div>
@@ -28,15 +45,10 @@
                         <!-- Post content-->
                         <article>
                             <!-- Preview image figure-->
-                            <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                            <figure class="mb-4"><img class="img-fluid rounded my-img-h300" :src="post.image" alt="..." /></figure>
                             <!-- Post content-->
                             <div class="mb-5">
-                                <p class="fs-5 mb-4">Science is an enterprise that should be cherished as an activity of the free human mind. Because it transforms who we are, how we live, and it gives us an understanding of our place in the universe.</p>
-                                <p class="fs-5 mb-4">The universe is large and old, and the ingredients for life as we know it are everywhere, so there's no reason to think that Earth would be unique in that regard. Whether of not the life became intelligent is a different question, and we'll see if we find that.</p>
-                                <p class="fs-5 mb-4">If you get asteroids about a kilometer in size, those are large enough and carry enough energy into our system to disrupt transportation, communication, the food chains, and that can be a really bad day on Earth.</p>
-                                <h2 class="fw-bolder mb-4 mt-5">I have odd cosmic thoughts every day</h2>
-                                <p class="fs-5 mb-4">For me, the most fascinating interface is Twitter. I have odd cosmic thoughts every day and I realized I could hold them to myself or share them with people who might be interested.</p>
-                                <p class="fs-5 mb-4">Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.</p>
+                                <p class="fs-5 mb-4 my-content">[[ post.content ]]</p>
                             </div>
                         </article>
                         <!-- Comments div-->
@@ -131,4 +143,8 @@
             </div>
         </div>
 
+{% endblock %}
+
+{% block extra-script %}
+    {% include 'include/post_detail_vue.html' %}
 {% endblock %}

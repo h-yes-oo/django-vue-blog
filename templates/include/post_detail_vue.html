@@ -1,0 +1,37 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    const PostDetailApp = {
+        delimiters: ['[[', ']]'],
+
+        data() {
+            return {
+                post: {},
+            }
+        },
+
+        created() {
+            console.log("created()...");
+            const postId = location.pathname.split('/')[3]
+            this.fetchPostDetail(postId);
+        },
+
+        methods: {
+            fetchPostDetail(postId) {
+                console.log("fetchPostDetail()...");
+
+                axios.get(`/api/post/${postId}/`)
+                .then(res => {
+                    console.log("FETCH POSTLIST GET RES", res);
+                    this.post = res.data;
+                })
+                .catch(err => {
+                    console.log("FETCH POSTLIST GET ERR.RESPONSE", err.response);
+                    alert(`${err.response.status} ${err.response.statusText}`);
+                });
+            }
+        }
+    }
+    Vue.createApp(PostDetailApp).mount('#page-top')
+</script>
