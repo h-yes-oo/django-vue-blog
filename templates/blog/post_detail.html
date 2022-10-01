@@ -11,9 +11,12 @@
         height: 300px;
         object-fit: cover;
     }
-
     .my-content {
         white-space: pre-wrap;
+    }
+    .my-link:hover {
+        cursor: pointer;
+        font-style: italic;
     }
 </style>
 {% endblock %}
@@ -83,15 +86,15 @@
                         <!-- Prev Post widget-->
                         <div class="card mb-4">
                             <div class="card-header">Prev Post</div>
-                            <div class="card-body">
-                                This is previous post title
+                            <div class="card-body my-link" @click="fetchPostDetail(prevPost.id)">
+                                [[ prevPost.title ]]
                             </div>
                         </div>
                         <!-- Next Post widget-->
                         <div class="card mb-4">
                             <div class="card-header">Next Post</div>
-                            <div class="card-body">
-                                This is next post title
+                            <div class="card-body my-link" @click="fetchPostDetail(nextPost.id)">
+                                [[ nextPost.title ]]
                             </div>
                         </div>
                         <!-- Categories widget-->

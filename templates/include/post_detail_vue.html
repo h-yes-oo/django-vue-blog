@@ -8,6 +8,8 @@
         data() {
             return {
                 post: {},
+                prevPost: {},
+                nextPost: {},
             }
         },
 
@@ -24,7 +26,9 @@
                 axios.get(`/api/post/${postId}/`)
                 .then(res => {
                     console.log("FETCH POSTLIST GET RES", res);
-                    this.post = res.data;
+                    this.post = res.data.post;
+                    this.prevPost = res.data.prevPost;
+                    this.nextPost = res.data.nextPost;
                 })
                 .catch(err => {
                     console.log("FETCH POSTLIST GET ERR.RESPONSE", err.response);
