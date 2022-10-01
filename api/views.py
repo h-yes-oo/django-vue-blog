@@ -8,7 +8,19 @@ from blog.models import Post, Category, Tag
 
 
 class ApiPostLV(BaseListView):
-    model = Post
+    # get_queryset 을 오버라이딩하는 경우 아래 줄이 필요 없음
+    # model = Post
+    def get_queryset(self):
+        # 장고에서 쿼리스트링을 파싱하는 방식
+        param_cate = self.request.GET.get('category')
+        param_tag = self.request.GET.get('tag')
+        if param_cate:
+            qs = Post.objects.filter(category__name__iexact=param_cate)
+        elif param_tag:
+            qs = Post.objects.filter(tags__name__iexact=param_tag)
+        else:
+            qs = Post.objects.all()
+        return qs
 
     def render_to_response(self, context, **response_kwargs):
         # post table 에서 가져온 데이터가 context.object_list 에 들어 있음
@@ -33,6 +45,7 @@ class ApiPostDV(BaseDetailView):
         }
         return JsonResponse(data=json_data, safe=True, status=200)
 
+
 class ApiCateTagView(View):
     def get(self, request, *args, **kwargs):
         qs1 = Category.objects.all()
@@ -46,4 +59,3 @@ class ApiCateTagView(View):
             'tagList': tag_list
         }
         return JsonResponse(data=json_data, safe=True, status=200)
-    

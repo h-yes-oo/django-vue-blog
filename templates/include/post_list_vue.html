@@ -8,19 +8,24 @@
         data() {
             return {
                 postList: [],
+                category: [],
+                tag: []
             }
         },
 
         created() {
             console.log("created()...");
+            const params = new URL(location).searchParams;
+            this.category = params.get('category');
+            this.tag = params.get('tag');
             this.fetchPostList();
         },
 
         methods: {
             fetchPostList() {
-                console.log("fetchPostList()...");
-
-                axios.get('/api/post/list/')
+                console.log("fetchPostList()...", this.category, this.tag);
+                const getUrl = `/api/post/list/${this.category ? `?category=${this.category}` : this.tag ? `?tag=${this.tag}` : ``}`;
+                axios.get(getUrl)
                 .then(res => {
                     console.log("FETCH POSTLIST GET RES", res);
                     this.postList = res.data;

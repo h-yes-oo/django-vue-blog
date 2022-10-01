@@ -51,8 +51,14 @@
                     console.log("FETCH CATE_TAG_LIST GET ERR.RESPONSE", err.response);
                     alert(`${err.response.status} ${err.response.statusText}`);
                 });
+            },
+            serverPage(category='', tag='') {
+              console.log("serverPage()...", category, tag);
+              if (category && tag) alert(`serverPage() both args Error: ${category} and ${tag}`);
+              else if (category) location.href = `/?category=${category}#portfolio`;
+              else if (tag) location.href = `/?tag=${tag}#portfolio`;
+              else location.href = `#portfolio`;
             }
-
         }
     }
     Vue.createApp(PostDetailApp).mount('#page-top')

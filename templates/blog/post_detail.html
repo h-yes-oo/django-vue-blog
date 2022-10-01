@@ -32,11 +32,11 @@
                         <p>
                             <span>[[ post.update_dt ]] &emsp;</span>
                             <i class="fas fa-copyright"></i> &nbsp;
-                            <span>[[ post.category ]] &emsp;</span>
+                            <span class="text-success my-link" @click="serverPage(post.category, '')">[[ post.category ]] &emsp;</span>
                             <i class="fas fa-tag"></i> &nbsp;
                             <span v-for="(tag, index) in post.tags" :key="index">
                                 <span v-if="index !== 0">,</span>
-                                [[ tag ]]
+                                <span class="text-success my-link" @click="serverPage('', tag)">[[ tag ]]</span>
                             </span> &emsp;
                             <i class="fas fa-heart"></i> &nbsp;
                             <span>[[ post.like]] &emsp;</span>
@@ -103,7 +103,7 @@
                             <div class="card-body">
                                 <span v-for="(category, index) in cateList" :key="category.id">
                                     <span v-if="index !== 0">&emsp;</span>
-                                    <span class="text-success my-link">[[ category ]]</span>
+                                    <span class="text-success my-link" @click="serverPage(category, '')">[[ category ]]</span>
                                 </span>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                             <div class="card-body">
                                 <span v-for="(tag, index) in tagList" :key="tag.id">
                                     <span v-if="index !== 0">&emsp;</span>
-                                    <span class="text-success my-link">[[ tag ]]</span>
+                                    <span class="text-success my-link" @click="serverPage('', tag)">[[ tag ]]</span>
                                 </span>
                             </div>
                         </div>
