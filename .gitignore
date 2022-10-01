@@ -1,5 +1,4 @@
 db
-media
 migrations
-__init__.py
 */__pycache__
+.env

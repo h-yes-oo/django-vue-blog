@@ -21,7 +21,7 @@ def obj_to_post(obj, flag=True):
     if obj.image:
         post['image'] = obj.image.url
     else:
-        post['image'] = 'https://via.placeholder.com/900x300/'
+        post['image'] = 'https://images.squarespace-cdn.com/content/v1/5a43aa577131a554900bb241/1517582374391-EZII4GCD6W5U2SWLMQEB/study-schedule-image_knowledgeovergrades.net.png?format=2500w'
 
     if obj.update_dt:
         post['update_dt'] = obj.update_dt.strftime('%Y-%m-%d %H:%M:%S')
