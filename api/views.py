@@ -3,7 +3,7 @@ from django.views import View
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.list import BaseListView
 
-from api.utils import obj_to_post, prev_next_post
+from api.utils import obj_to_post, prev_next_post, obj_to_comment
 from blog.models import Post, Category, Tag
 
 
@@ -35,13 +35,19 @@ class ApiPostDV(BaseDetailView):
     model = Post
 
     def render_to_response(self, context, **response_kwargs):
+        # obj 는 pk 로 검색한 특정 Post record
         obj = context['object']
         post = obj_to_post(obj)
         prev_post, next_post = prev_next_post(obj)
+
+        qs_comment = obj.comment_set.all()
+        comment_list = [obj_to_comment(obj) for obj in qs_comment]
+
         json_data = {
             'post': post,
             'prevPost': prev_post,
-            'nextPost': next_post
+            'nextPost': next_post,
+            'commentList': comment_list
         }
         return JsonResponse(data=json_data, safe=True, status=200)
 

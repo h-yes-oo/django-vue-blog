@@ -10,8 +10,9 @@
                 post: {},
                 prevPost: {},
                 nextPost: {},
+                commentList: [],
                 cateList: [],
-                tagList: []
+                tagList: [],
             }
         },
 
@@ -32,6 +33,7 @@
                     this.post = res.data.post;
                     this.prevPost = res.data.prevPost;
                     this.nextPost = res.data.nextPost;
+                    this.commentList = res.data.commentList;
                 })
                 .catch(err => {
                     console.log("FETCH POSTLIST GET ERR.RESPONSE", err.response);
