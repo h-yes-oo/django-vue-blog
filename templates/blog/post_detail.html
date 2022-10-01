@@ -63,7 +63,13 @@
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <!-- Comment form-->
-                                    <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
+                                    <form id="comment-form" ref="commentForm" class="mb-4">
+                                        <textarea name="content" class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                        <div class="d-flex justify-content-end mt-1">
+                                            <div @click="resetForm" class="btn btn-outline-secondary btn-sm me-2">RESET</div>
+                                            <div @click="submitForm" class="btn btn-primary btn-sm">SUBMIT</div>
+                                        </div>
+                                    </form>
                                     <!-- Comment with nested comments-->
                                     <div v-for="comment in commentList" :key="comment.id" class="d-flex mb-4">
                                         <!-- Parent comment-->
