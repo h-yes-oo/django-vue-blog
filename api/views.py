@@ -59,3 +59,13 @@ class ApiCateTagView(View):
             'tagList': tag_list
         }
         return JsonResponse(data=json_data, safe=True, status=200)
+
+class ApiPostLikeDV(BaseDetailView):
+    model = Post
+
+    def render_to_response(self, context, **response_kwargs):
+        # Post 테이블에서 pk 로 특정 레코드를 하나 꺼내온 데이터가 들어있다
+        obj = context['object']
+        obj.like += 1
+        obj.save()
+        return JsonResponse(data=obj.like, safe=False, status=200)

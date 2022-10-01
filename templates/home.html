@@ -41,7 +41,10 @@
                                 <img class="img-fluid my-img-h300" :src="post.image" alt="..." />
                             </a>
                             <div class="portfolio-caption">
-                                <div class="portfolio-caption-subheading text-muted">[[ post.category ]]</div>
+                                <div class="portfolio-caption-subheading text-muted">
+                                    [[ post.category ]] &emsp;
+                                    <i class="fas fa-heart text-danger"></i> [[ post.like ]]
+                                </div>
                                 <div class="portfolio-caption-heading my-post-title">[[ post.title ]]</div>
                             </div>
                         </div>

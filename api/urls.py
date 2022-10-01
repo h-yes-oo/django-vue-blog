@@ -7,4 +7,5 @@ urlpatterns = [
     path('post/list/', views.ApiPostLV.as_view(), name='post_list'),
     path('post/<int:pk>/', views.ApiPostDV.as_view(), name='post_detail'),
     path('catetag/', views.ApiCateTagView.as_view(), name='category_list'),
+    path('like/<int:pk>/', views.ApiPostLikeDV.as_view(), name='post_like')
 ]
