@@ -11,6 +11,8 @@ from blog.models import Post, Category, Tag, Comment
 class ApiPostLV(BaseListView):
     # get_queryset 을 오버라이딩하는 경우 아래 줄이 필요 없음
     # model = Post
+    paginate_by = 3
+
     def get_queryset(self):
         # 장고에서 쿼리스트링을 파싱하는 방식
         param_cate = self.request.GET.get('category')
@@ -28,8 +30,18 @@ class ApiPostLV(BaseListView):
         qs = context['object_list']
         # 쿼리셋의 각 오브젝트에 대하여 obj_to_post 로 serialize
         post_list = [obj_to_post(obj, False) for obj in qs]
+
+        page_count = context['paginator'].num_pages
+        current_page = context['page_obj'].number
+
+        json_data = {
+            'postList': post_list,
+            'pageCount': page_count,
+            'currentPage': current_page
+        }
+
         # 딕셔너리가 아니므로 safe 는 False 로 설정
-        return JsonResponse(data=post_list, safe=False, status=200)
+        return JsonResponse(data=json_data, safe=False, status=200)
 
 
 class ApiPostDV(BaseDetailView):

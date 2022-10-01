@@ -9,8 +9,41 @@
             return {
                 postList: [],
                 category: [],
-                tag: []
+                tag: [],
+                pageCount: 1,
+                currentPage: 1,
             }
+        },
+
+        computed: {
+          pages() {
+            console.log("pages()...");
+            let pages3 = [];
+            if (this.pageCount === 1) {
+              pages3 = [1];
+            } else if (this.pageCount === 2) {
+              pages3 = [1,2];
+            } else if (this.pageCount >= 3) {
+              if (this.currentPage === 1) {
+                pages3 = [1,2,3];
+              } else if (this.currentPage === this.pageCount) {
+                pages3 = [this.currentPage - 2, this.currentPage -1, this.currentPage];
+              } else {
+                page3 = [this.currentPage - 1, this.currentPage, this.currentPage + 1];
+              }
+            }
+            return pages3;
+          },
+
+          prevClass() {
+            if (this.currentPage === 1) return 'page-item disabled';
+            return 'page-item my-link';
+          },
+
+          nextClass() {
+            if (this.currentPage === this.pageCount) return 'page-item disabled';
+            return 'page-item my-link';
+          },
         },
 
         created() {
@@ -22,18 +55,45 @@
         },
 
         methods: {
-            fetchPostList() {
-                console.log("fetchPostList()...", this.category, this.tag);
-                const getUrl = `/api/post/list/${this.category ? `?category=${this.category}` : this.tag ? `?tag=${this.tag}` : ``}`;
+            fetchPostList(page=1) {
+                console.log("fetchPostList()...", page, this.category, this.tag);
+                const getUrl = `/api/post/list/?page=${page}${this.category ? `&category=${this.category}` : this.tag ? `&tag=${this.tag}` : ``}`;
+                
                 axios.get(getUrl)
                 .then(res => {
                     console.log("FETCH POSTLIST GET RES", res);
-                    this.postList = res.data;
+                    this.postList = res.data.postList;
+                    this.pageCount = res.data.pageCount;
+                    this.currentPage = res.data.currentPage;
                 })
                 .catch(err => {
                     console.log("FETCH POSTLIST GET ERR.RESPONSE", err.response);
                     alert(`${err.response.status} ${err.response.statusText}`);
                 });
+            },
+
+            pageChanged(page) {
+              console.log("pageChanged()...", page);
+              this.currentPage = page;
+              this.fetchPostList(this.currentPage);
+            },
+
+            prevPage() {
+              if (this.currentPage <= 1) return;
+              this.currentPage = this.currentPage - 1;
+              this.fetchPostList(this.currentPage);
+            }, 
+
+            nextPage() {
+              if (this.currentPage >= this.pageCount) return;
+              this.currentPage = this.currentPage + 1;
+              this.fetchPostList(this.currentPage);
+            },
+
+            // 인자를 받는 경우 캐시되는 것이 의미가 없으므로 computed 보다는 method 에 구현하는 것이 적절
+            pageClass(page) {
+              if (this.currentPage === page) return 'page-item my-link active';
+              return 'page-item my-link';
             }
         }
     }
