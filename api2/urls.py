@@ -20,5 +20,6 @@ urlpatterns = [
     path('post/', views.PostListAPIView.as_view(), name='post-list'),
     path('post/<int:pk>/', views.PostRetrieveAPIView.as_view(), name='post-detail'),
     # url patter 에 pk 가 없는 경우 name postfix 를 -list 로 하는 것이 관례
-    path('comment/', views.CommentCreateAPIView.as_view(), name='comment-list')
+    path('comment/', views.CommentCreateAPIView.as_view(), name='comment-list'),
+    path('post/<int:pk>/like/', views.PostLikeAPIView.as_view(), name='post-like'),
 ]
