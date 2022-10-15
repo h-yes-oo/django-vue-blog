@@ -22,4 +22,5 @@ urlpatterns = [
     # url patter 에 pk 가 없는 경우 name postfix 를 -list 로 하는 것이 관례
     path('comment/', views.CommentCreateAPIView.as_view(), name='comment-list'),
     path('post/<int:pk>/like/', views.PostLikeAPIView.as_view(), name='post-like'),
+    path('catetag/', views.CateTagAPIView.as_view(), name='catetag'),
 ]
