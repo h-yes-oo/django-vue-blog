@@ -19,7 +19,10 @@
 #     queryset = Comment.objects.all()
 #     serializer_class = CommentSerializer
 # ------------------------------------------------
+from collections import OrderedDict
+
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, GenericAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -27,9 +30,10 @@ from api2.serializers import CommentSerializer, PostListSerializer, PostRetrieve
 from blog.models import Post, Comment, Category, Tag
 
 
-class PostListAPIView(ListAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostListSerializer
+# 아래에서 pagination 을 적용하여 다시 구현
+# class PostListAPIView(ListAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostListSerializer
 
 
 # PostListAPIView 와 내부 구현은 같지만 서로 다른 클래스를 상속 받기 때문에 다른 동작을 한다
@@ -81,3 +85,20 @@ class CateTagAPIView(APIView):
         }
         serializer = CateTagSerializer(instance=data)
         return Response(serializer.data)
+
+
+class PostPageNumberPagination(PageNumberPagination):
+    page_size = 3
+
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('postList', data),
+            ('pageCnt', self.page.paginator.num_pages),
+            ('curPage', self.page.number),
+        ]))
+
+
+class PostListAPIView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostListSerializer
+    pagination_class = PostPageNumberPagination
