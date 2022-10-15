@@ -19,12 +19,11 @@
 #     queryset = Comment.objects.all()
 #     serializer_class = CommentSerializer
 # ------------------------------------------------
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api2.serializers import CommentSerializer, PostListSerializer, PostRetrieveSerializer, PostLikeSerializer, \
-    CateTagSerializer
+from api2.serializers import CommentSerializer, PostListSerializer, PostRetrieveSerializer, CateTagSerializer
 from blog.models import Post, Comment, Category, Tag
 
 
@@ -44,24 +43,32 @@ class CommentCreateAPIView(CreateAPIView):
     serializer_class = CommentSerializer
 
 
-class PostLikeAPIView(UpdateAPIView):
+class PostLikeAPIView(GenericAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostLikeSerializer
+    # serializer_class = PostLikeSerializer
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+    # PATCH 메소드로 처리하는 경우
+    # def update(self, request, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_object()
+    #     data = {'like': instance.like + 1}
+    #     serializer = self.get_serializer(instance, data=data, partial=partial)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #
+    #     if getattr(instance, '_prefetched_objects_cache', None):
+    #         # If 'prefetch_related' has been applied to a queryset, we need to
+    #         # forcibly invalidate the prefetch cache on the instance.
+    #         instance._prefetched_objects_cache = {}
+    #
+    #     return Response(data['like'])
+
+    # GET 메소드로 처리하도록 수정
+    def get(self, request, *args, **kwargs):
         instance = self.get_object()
-        data = {'like': instance.like + 1}
-        serializer = self.get_serializer(instance, data=data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
-
-        return Response(data['like'])
+        instance.like += 1
+        instance.save()
+        return Response(instance.like)
 
 
 class CateTagAPIView(APIView):
