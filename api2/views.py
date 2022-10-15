@@ -26,7 +26,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api2.serializers import CommentSerializer, PostListSerializer, PostRetrieveSerializer, CateTagSerializer
+from api2.serializers import CommentSerializer, PostListSerializer, PostRetrieveSerializer, CateTagSerializer, \
+    PostSerializerDetail
 from blog.models import Post, Comment, Category, Tag
 
 
@@ -37,9 +38,9 @@ from blog.models import Post, Comment, Category, Tag
 
 
 # PostListAPIView 와 내부 구현은 같지만 서로 다른 클래스를 상속 받기 때문에 다른 동작을 한다
-class PostRetrieveAPIView(RetrieveAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostRetrieveSerializer
+# class PostRetrieveAPIView(RetrieveAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostRetrieveSerializer
 
 
 class CommentCreateAPIView(CreateAPIView):
@@ -102,6 +103,8 @@ class PostListAPIView(ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostListSerializer
     pagination_class = PostPageNumberPagination
+    
+    # 이미지 url 을 절대 경로가 아닌 일반 url로 받기 위함
 
     def get_serializer_context(self):
         """
@@ -114,3 +117,42 @@ class PostListAPIView(ListAPIView):
         }
 
 
+def get_prev_next(instance):
+    try:
+        prev_instance = instance.get_previous_by_update_dt()
+    except instance.DoesNotExist:
+        prev_instance = None
+    try:
+        next_instance = instance.get_next_by_update_dt()
+    except instance.DoesNotExist:
+        next_instance = None
+    return prev_instance, next_instance
+
+
+class PostRetrieveAPIView(RetrieveAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializerDetail
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        prev_instance, next_instance = get_prev_next(instance)
+        comment_list = instance.comment_set.all()
+        data = {
+            'post': instance,
+            'prevPost': prev_instance,
+            'nextPost': next_instance,
+            'commentList': comment_list,
+        }
+        serializer = self.get_serializer(instance = data)
+        return Response(serializer.data)
+
+    # 이미지 url 을 절대 경로가 아닌 일반 url로 받기 위함
+    def get_serializer_context(self):
+        """
+        Extra context provided to the serializer class.
+        """
+        return {
+            'request': None,
+            'format': self.format_kwarg,
+            'view': self
+        }
